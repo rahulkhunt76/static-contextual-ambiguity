@@ -8,9 +8,7 @@
 \usepackage{array}
 \usepackage{graphicx}
 \usepackage{pdfpages}
-\usepackage{pdflscape}
 \usepackage{xurl}
-\usepackage{seqsplit}
 \usepackage{hyperref}
 \usepackage{microtype}
 \renewcommand{\familydefault}{\sfdefault}
@@ -20,7 +18,6 @@
 \hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent,citecolor=accent}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{5pt}
-\newcommand{\hash}[1]{{\small\ttfamily\seqsplit{#1}}}
 \input{generated_tables.tex}
 \title{Static vs Contextual Embeddings for Lexical Ambiguity:\\
 A Word-in-Context Evaluation\\Method and Results Appendix}
@@ -32,6 +29,11 @@ A Word-in-Context Evaluation\\Method and Results Appendix}
 
 \noindent\textbf{Project repository:} \url{https://github.com/Mr-Dark-debug/static-contextual-ambiguity}
 
+\noindent\emph{AI-assisted wording: OpenAI Codex helped edit the explanatory
+prose in this appendix. A Claude rewrite supplied by the authors also informed
+Sections 2--10. We checked the wording against our saved results; the tables
+come from those results. Section 10 explains how we used each tool.}
+
 \section{Research question and scope}
 This project asks whether a context-sensitive target representation distinguishes
 same-sense from different-sense uses more effectively than static alternatives.
@@ -40,10 +42,9 @@ BERT-base target representation. It is a controlled representation probe, not a
 claim about fine-tuned task state of the art.
 
 \section{Dataset provenance and audit}
-The source is the official SuperGLUE v2 WiC archive at
-\url{https://dl.fbaipublicfiles.com/glue/superglue/data/v2/WiC.zip}. Its SHA-256 is
-\hash{ee7e67f4ae9eafbf533780faa198e62167f3cda54256cdf261877be3c0e90900}.
-The release is distributed under CC BY-NC 4.0 by the WiC authors.
+We used the official SuperGLUE v2 release of WiC, available at
+\url{https://dl.fbaipublicfiles.com/glue/superglue/data/v2/WiC.zip}.
+The WiC authors distribute it under CC BY-NC 4.0.
 
 \begin{table}[h]
 \centering
@@ -59,42 +60,42 @@ Test & 1,400 & 0 & 0 & 1,400 & 521 & 20 \\
 \end{tabular}
 \end{table}
 
-All target spans are non-empty half-open character intervals. IDs are unique
-within splits. Four symmetric duplicate pairs occur within training, none within
-validation, and no task pair crosses train and validation. The label-hidden test
-split is audited but not evaluated.
+We checked the row counts and target positions in every split. Each target span
+has a start and end position and contains at least one character. IDs are unique
+within each split. Training contains four symmetric duplicate pairs; validation
+contains none. We found no such pair shared between training and validation.
+The test labels are hidden, so we checked the split but did not score it.
 
 \section{Representations}
 \subsection{Static baselines}
-GloVe uses the 6B-token, uncased, 300-dimensional release. Archive SHA-256:
-\hash{617afb2fe6cbd085c235baf7a465b96f4112bd7f7ccb2b2cbd649fed9cbcf2fb}.
-The target diagnostic looks up the supplied lemma on both sides, making every
-available paired cosine exactly 1 by construction. Eighteen training lemmas are
-OOV; missing target scores are replaced by the median finite training score.
+Both static comparisons use the uncased GloVe release with 300 numbers per word.
+The target-only comparison looks up the WiC lemma in each sentence. Because the
+lemma is the same on both sides, its similarity is always 1 when a vector is
+available. GloVe has no vector for 18 training lemmas; we replaced those missing
+scores with the median of the available training scores.
 
-Context vectors average in-vocabulary regex word tokens after excluding only the
-token span that overlaps the marked target. Candidate windows are $\pm2$,
-$\pm5$, $\pm10$, and the sentence. If a context side has no usable token, it falls
-back to that side's target lemma; this occurs once per window in training and zero
-times in validation. No evaluated context pair remains missing.
+For the nearby-word comparison, we averaged the GloVe vectors of words around
+the marked target, leaving out the target itself. We tried two, five, and ten
+words on either side, as well as all words in the sentence. If none of the
+surrounding words had a GloVe vector, we used the target lemma as a fallback.
+That happened once in training for each window size and never in validation.
 
 \subsection{Contextual target}
-The encoder is \path{google-bert/bert-base-uncased}, revision
-\hash{f584a14f45f850d60d0036d54f3e4dfdb3d52075}. It remains in evaluation mode;
-there is no fine-tuning. A fast tokenizer emits character offsets. Every
-WordPiece satisfying \texttt{token\_end > target\_start} and
-\texttt{token\_start < target\_end} is selected, ignoring zero-width special
-tokens, and selected WordPieces are averaged. Layers 1-12 and mean-last-four are
-cached from one forward pass.
+We used the pretrained \path{google-bert/bert-base-uncased} checkpoint without
+fine-tuning it. The tokenizer tells us which pieces of text belong to the
+marked word. We averaged the BERT vectors for all pieces that overlap that word.
+One pass through BERT gave us each of its 12 layers and the average of the last
+four layers. We saved these representations for the comparisons below.
 
 \section{Selection and evaluation protocol}
-The balanced training labels are stratified into 4,342 tune and 1,086 internal
-holdout rows using seed 2026. Candidate thresholds are fitted on tune rows by
-macro F1. Candidate representations are ranked on internal-holdout macro F1,
-then accuracy, ROC-AUC, and declared simplicity order. Winners are frozen before
-validation metrics are computed. Thresholds are then refitted on all 5,428
-training rows. Selection ledger hash:
-\hash{debfd61b068f22ea1a737f238bd90ea4fb8bf44f675907e428949b559a0bb309}.
+We made every model choice using training data. With random seed 2026, we split
+the 5,428 balanced training pairs into 4,342 pairs for tuning and 1,086 for an
+internal check, keeping the same class balance in both groups. We chose a
+similarity cutoff for each candidate on the tuning group using macro F1. Then
+we compared candidates on the internal group, using macro F1 first, followed by
+accuracy, ROC-AUC, and the simpler representation if needed. We fixed the
+winners before looking at validation results and refitted their cutoffs on all
+5,428 training pairs.
 
 \begin{longtable}{llrrc}
 \caption{Training-only candidate selection.}\\
@@ -111,30 +112,28 @@ Family & Candidate & Tune macro F1 & Holdout macro F1 & Selected \\
 \end{longtable}
 
 \section{Primary validation results}
-Predictions use score $\geq$ threshold as same-sense. Precision and recall use
-same-sense as the positive label. Confusion-matrix layout is TN, FP / FN, TP.
-Intervals are percentile intervals from 1,000 fixed-seed paired example
-resamples.
+We predict the same meaning when a pair's similarity reaches its chosen cutoff.
+For precision and recall, same meaning is the positive class. The confidence
+intervals come from 1,000 resamples of the validation pairs, using a fixed seed.
 
-\begin{landscape}
-\begin{longtable}{lrrrrrrr}
-\caption{Primary results on 638 balanced validation pairs.}\\
+\begin{table}[!htbp]
+\centering
+\caption{Primary results on 638 balanced validation pairs.}
+\setlength{\tabcolsep}{3pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrr}
 \toprule
 System & Threshold & Accuracy & Accuracy 95\% CI & Macro F1 & Precision & Recall & ROC-AUC \\
 \midrule
-\endfirsthead
-\toprule
-System & Threshold & Accuracy & Accuracy 95\% CI & Macro F1 & Precision & Recall & ROC-AUC \\
-\midrule
-\endhead
 \PrimaryMetricRows
 \bottomrule
-\end{longtable}
-\end{landscape}
+\end{tabular}%
+}
+\end{table}
 
-The selected BERT representation is correct on 428 pairs; GloVe context is
-correct on 354. BERT alone is correct on 178 pairs, GloVe context alone on 104,
-both on 250, and both primary systems are wrong on 106.
+The selected BERT representation got 428 pairs right, while the nearby-word
+GloVe comparison got 354. Both were right on 250 pairs. BERT alone got 178
+right, GloVe alone got 104 right, and both were wrong on 106.
 
 \begin{longtable}{llrr}
 \caption{Paired primary-system differences with 95\% intervals.}\\
@@ -150,13 +149,15 @@ Contrast & Metric & Estimate & 95\% interval \\
 \bottomrule
 \end{longtable}
 
-The accuracy, macro-F1, and ROC-AUC intervals for GloVe context minus BERT all
-exclude zero. This supports a difference under the current paired sample and
-protocol; it does not provide a universal model ordering.
+The intervals for the difference between GloVe context and BERT exclude zero
+for accuracy, macro F1, and ROC-AUC. BERT therefore performed better on these
+validation pairs under our comparison procedure. We would need other datasets
+to know whether the same ranking holds elsewhere.
 
 \section{Secondary BERT layer analysis}
-Each layer threshold is trained on all training pairs. Validation layer results
-are descriptive and do not replace the frozen primary representation.
+We also looked at the BERT layers individually. We fitted each layer's cutoff
+on training pairs. These validation results describe the layers; they did not
+change our chosen representation.
 
 \begin{table}[h]
 \centering
@@ -170,106 +171,72 @@ Layer & Threshold & Accuracy & Macro F1 & ROC-AUC \\
 \end{tabular}
 \end{table}
 
-Accuracy rises broadly from layer 1 to layer 9 and then declines through layer
-12. Layer 10 has the largest individual-layer ROC-AUC. This is compatible with
-the train-selected mean-last-four result, but validation was not reused for
-selection.
+Accuracy generally rises from layer 1 to layer 9, then falls through layer 12.
+Layer 10 has the highest ROC-AUC of the individual layers. This pattern fits
+with the last-four-layer average chosen during training, but we did not use
+validation to choose it.
 
 \section{Error analysis}
-System-agreement partitions are disjoint. There are 250 both-primary-correct,
-178 BERT-only-correct, 104 static-only-correct, 54 all-system-wrong, and 52 rows
-where both primary systems are wrong but the one-class target diagnostic is
-right. For BERT, error margin is absolute distance from the frozen cosine
-threshold. Of 210 errors, 33 are within 0.025 and 53 occupy the top error-margin
-quartile.
+The groups above do not overlap. On 54 of the 106 pairs missed by both main
+systems, the target-only GloVe diagnostic was also wrong; on the other 52 it
+happened to be right. BERT missed 210 pairs in total. Thirty-three of those
+scores were within 0.025 of its cutoff, while 53 were in the quarter of errors
+furthest from the cutoff.
 
-BERT recovers 77.43\% of same-sense pairs and 56.74\% of different-sense pairs;
-GloVe context recovers 46.39\% and 64.58\%, respectively. These are descriptive
-class skews. Saved high-margin examples include a same-sense anatomical
-\emph{ball}/\emph{balls} pair that BERT separates strongly and different-sense
-\emph{engrave} and \emph{map} pairs that it places close together. Conversely,
-BERT links low-overlap same-sense examples such as \emph{rust remover}/\emph{paint
-remover}. Fine sense granularity and constructional similarity are plausible
-explanations, not causal findings.
+BERT recovered 77.43\% of same-meaning pairs and 56.74\% of different-meaning
+pairs. Nearby-word GloVe recovered 46.39\% and 64.58\%, respectively. In saved
+examples, BERT placed a same-meaning anatomical \emph{ball}/\emph{balls} pair
+far apart, but placed different meanings of \emph{engrave} and \emph{map} close
+together. It also linked the same meaning in \emph{rust remover} and \emph{paint
+remover}, despite their different wording. Fine differences in meaning may
+explain some errors, but these examples alone cannot establish the cause.
 
 \section{Reproducibility record}
-The locked runtime is Python 3.11.15, NumPy 2.4.6, PyTorch 2.11.0+cu130, and
-Transformers 5.17.0. Full inference ran on an NVIDIA GeForce RTX 3050 Ti Laptop
-GPU. Arrays are keyed by dataset fingerprint, model revision, maximum length,
-seed, and cache schema. The clean cached reproduction recorded Git commit
-\texttt{7c6c956a173920b8aa685e206b9e4cdade1afdb6} on branch \texttt{main}.
+We ran BERT inference on an NVIDIA GeForce RTX 3050 Ti Laptop GPU. The
+repository contains the locked software versions, configuration, scripts, and
+saved results needed to repeat the comparison.
 
 \section{Limitations}
-The sample covers one English benchmark; bootstrap intervals omit dataset-design
-and modeling uncertainty. BERT is an older frozen base encoder. The static
-context baseline has no syntax, weighting, subword model, or supervised
-classifier. A global cosine threshold compresses potentially useful geometry.
-Surface-mismatch groups are observational and confounded. No score is reported
-for the label-hidden test split.
+We tested one English dataset, so the result may change on other tasks or
+languages. Our intervals reflect variation among these validation pairs, not
+uncertainty from the dataset design or our choice of models. We used an older
+frozen BERT base checkpoint. Our simple GloVe context average does not model
+word order or syntax. A single similarity cutoff may also miss useful detail.
+We did not score the test split because its labels are unavailable.
 
 \section{Author contributions and use of AI tools}
-\emph{AI-assisted wording notice: OpenAI Codex drafted the wording of this
-section for the authors to verify before signing their declarations.}
+We chose WiC, planned the three comparisons, loaded the pretrained GloVe and
+BERT models, and selected the settings and cutoffs from training data. We ran
+the dataset checks, model inference, and validation analysis, then checked the
+tables and figures against the saved results. We did not train or fine-tune
+model weights.
 
-The authors selected WiC, designed the three comparison conditions, initialized
-the frozen GloVe and BERT checkpoints, and chose settings and thresholds using
-training data only. They ran and checked the audit, inference, validation
-analysis, tables, and figures. They did not train or fine-tune model weights.
-The saved selection ledger, predictions, and metrics record these choices.
+We chose the examples, explanations, and graphs for the poster and assembled it
+in LaTeX. We used Canva to explore the visual layout and GLM to help write some
+of the LaTeX layout code. OpenAI Codex helped with basic coding and debugging
+while we worked through the code together. It also helped draft and edit the
+appendix, including this disclosure, and checked the PDFs. A rewrite produced
+with Claude helped us make Sections 2--10 easier to read. We checked these
+suggestions against our experiment and take responsibility for the code, data,
+results, wording, and final submission. We will identify any further
+AI-generated passages in the appendix if we add them before submission.
 
-The authors chose the poster's explanations, examples, and graphs and checked
-the numbers against saved results. Canva helped explore the layout; the final
-poster was assembled in LaTeX. GLM assisted with LaTeX layout code. OpenAI
-Codex provided limited coding suggestions and debugging in an interactive
-paired-programming process. It also drafted this disclosure, revised appendix
-wording and the poster's final italic sentence, and checked the PDFs. The
-authors remain responsible for the code, claims, figures, and final submission.
-No AI detector score is
-used as evidence of authorship.
-
-\section{References}
-\begin{thebibliography}{99}
+\addcontentsline{toc}{section}{References}
+\begin{thebibliography}{4}
 \bibitem{survey} J. Camacho-Collados and M. T. Pilehvar. From Word to Sense
 Embeddings: A Survey on Vector Representations of Meaning. \emph{JAIR}, 2018.
 \url{https://doi.org/10.1613/jair.1.11259}.
 \bibitem{wic} M. T. Pilehvar and J. Camacho-Collados. WiC: The Word-in-Context
 Dataset for Evaluating Context-Sensitive Meaning Representations. NAACL, 2019.
 \url{https://doi.org/10.18653/v1/N19-1128}.
-\bibitem{superglue} A. Wang et al. SuperGLUE: A Stickier Benchmark for
-General-Purpose Language Understanding Systems. NeurIPS, 2019.
-\url{https://papers.nips.cc/paper_files/paper/2019/hash/4496bf24afe7fab6f046bf4923da8de6-Abstract.html}.
 \bibitem{glove} J. Pennington, R. Socher, and C. D. Manning. GloVe: Global Vectors
 for Word Representation. EMNLP, 2014.
-\url{https://doi.org/10.3115/v1/D14-1162}.
+\url{https://doi.org/10.3115/v1/D14-1162}. Pretrained vectors:
+\url{https://nlp.stanford.edu/projects/glove/}.
 \bibitem{bert} J. Devlin, M.-W. Chang, K. Lee, and K. Toutanova. BERT:
 Pre-training of Deep Bidirectional Transformers for Language Understanding.
-NAACL, 2019. \url{https://doi.org/10.18653/v1/N19-1423}.
-\bibitem{loureiro} D. Loureiro et al. Analysis and Evaluation of Language Models
-for Word Sense Disambiguation. \emph{Computational Linguistics}, 2021.
-\url{https://doi.org/10.1162/coli_a_00405}.
-\bibitem{zhou} Y. Zhou and D. Bollegala. Learning Sense-Specific Static Embeddings
-using Contextualised Word Embeddings as a Proxy. PACLIC, 2021.
-\url{https://aclanthology.org/2021.paclic-1.53/}.
-\bibitem{rawc} S. Trott and B. Bergen. RAW-C: Relatedness of Ambiguous Words in
-Context. ACL-IJCNLP, 2021. \url{https://doi.org/10.18653/v1/2021.acl-long.550}.
-\bibitem{haber} J. Haber and M. Poesio. Patterns of Polysemy and Homonymy in
-Contextualised Language Models. Findings of EMNLP, 2021.
-\url{https://doi.org/10.18653/v1/2021.findings-emnlp.226}.
-\bibitem{soper} E. Soper and J.-P. Koenig. When Polysemy Matters: Modeling
-Semantic Categorization with Word Embeddings. *SEM, 2022.
-\url{https://doi.org/10.18653/v1/2022.starsem-1.10}.
-\bibitem{fodor} J. Fodor, S. De Deyne, and S. Suzuki. The Importance of Context in
-the Evaluation of Word Embeddings: The Effects of Antonymy and Polysemy. IWCS,
-2023. \url{https://aclanthology.org/2023.iwcs-1.16/}.
-\bibitem{erren} T. C. Erren and P. E. Bourne. Ten Simple Rules for a Good Poster
-Presentation. \emph{PLOS Computational Biology}, 2007.
-\url{https://doi.org/10.1371/journal.pcbi.0030102}.
-\bibitem{wic_archive} SuperGLUE. WiC v2 dataset archive.
-\url{https://dl.fbaipublicfiles.com/glue/superglue/data/v2/WiC.zip}.
-\bibitem{glove_release} Stanford NLP. GloVe pretrained-vector release, 6B tokens,
-300 dimensions. \url{https://nlp.stanford.edu/projects/glove/}.
-\bibitem{bert_checkpoint} Google BERT. \texttt{bert-base-uncased} model card and
-checkpoint. \url{https://huggingface.co/google-bert/bert-base-uncased}.
+NAACL, 2019. \url{https://doi.org/10.18653/v1/N19-1423}. Model checkpoint:
+\url{https://huggingface.co/google-bert/bert-base-uncased}.
 \end{thebibliography}
 
 \clearpage

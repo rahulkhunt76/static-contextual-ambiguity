@@ -19,7 +19,6 @@ These are predictions, not conclusions. They will not be reworded after the vali
 The project uses the WiC portion of the official SuperGLUE v2 archive:
 
 - Source: `https://dl.fbaipublicfiles.com/glue/superglue/data/v2/WiC.zip`
-- Archive SHA-256: `ee7e67f4ae9eafbf533780faa198e62167f3cda54256cdf261877be3c0e90900`
 - Upstream license: CC BY-NC 4.0, as stated by the original WiC site
 - Train: 5,428 pairs; 2,714 false and 2,714 true
 - Validation: 638 pairs; 319 false and 319 true

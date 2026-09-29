@@ -99,7 +99,7 @@
 
   \vspace{2mm}
   {\fontsize{44}{49}\selectfont\bfseries Static vs Contextual Embeddings for Lexical Ambiguity\par}
-  {\fontsize{29}{34}\selectfont\textcolor{trierblue}{A Word-in-Context Evaluation}\par}
+  {\fontsize{29}{34}\selectfont\textcolor{trierblue}{A Word in Context Evaluation}\par}
 
   \vspace{3mm}
   \begin{minipage}[t]{0.43\textwidth}\centering
@@ -139,46 +139,46 @@ The spelling is identical, but the meaning changes because of the surrounding wo
 We wanted to understand whether a computer model represents the same word differently when its context changes, and whether that difference helps it decide if the meaning is the same or different.
 
 \sectiontitle{Inspiration}
-Our experiment follows the \textbf{Word-in-Context (WiC)} task introduced by Pilehvar and Camacho-Collados (2019). WiC avoids asking for a dictionary definition. Instead it asks: \textbf{does the same word have the same meaning in two sentences?}
+Our experiment follows the \textbf{Word in Context (WiC)} task introduced by Pilehvar and Camacho-Collados (2019). WiC avoids asking for a dictionary definition. It asks \textbf{whether the same word has the same meaning in two sentences}.
 
-Camacho-Collados and Pilehvar (2018) also describe a problem with traditional word representations: one stored vector can mix several meanings together. That motivated our comparison between a fixed representation and representations that use context.
+Camacho-Collados and Pilehvar (2018) describe a problem with traditional word representations. One stored vector can mix several meanings together. That motivated our comparison between a fixed representation and representations that use context.
 
 \sectiontitle{Background}
-A \textbf{word embedding} is a list of numbers used to represent a word computationally. We compare two pretrained approaches: \textbf{GloVe} and \textbf{BERT}.
+A \textbf{word embedding} is a list of numbers used to represent a word computationally. We compare two pretrained approaches called \textbf{GloVe} and \textbf{BERT}.
 
 \textbf{GloVe} learns one stored vector for each word from patterns of words occurring together in large text collections. The vector for \textit{bank} therefore stays the same in a river sentence and a money sentence. This is a \textbf{static embedding}.
 
 \textbf{BERT} reads the surrounding sentence before creating the target-word representation. Its representation of \textit{bank} can therefore change between those two sentences. This is a \textbf{contextual representation}.
 
-The two meanings of \textit{bank} above are \textbf{homonyms} because they are unrelated. Related meanings are called \textbf{polysemy}; for example, \textit{paper} can mean writing material or a newspaper. The names are a mouthful, but the distinction is simple: unrelated meanings versus related ones.
+The two meanings of \textit{bank} above are \textbf{homonyms} because they are unrelated. Related meanings are called \textbf{polysemy}. For example, \textit{paper} can mean writing material or a newspaper. The distinction is between unrelated and related meanings.
 
 WiC does not ask the model to name a sense. It only asks whether the target word has the \textbf{same meaning} or a \textbf{different meaning} in the two sentences.
 
 \columnbreak
 \sectiontitle{Hypothesis}
-We expected more sentence context to make changes in meaning easier to recognise.
+We expected more context to make changes in meaning easier to recognise.
 
-With GloVe target-only, \textit{bank} receives the same vector in both sentences, so the method cannot see the river-versus-money difference. The validation set has \textbf{638 pairs}: 319 same-meaning and 319 different-meaning. A method that always chooses one answer would still get half correct, so \textbf{50\% is our simple baseline}.
+GloVe gives \textit{bank} the same vector in both sentences, so it cannot see the difference between the river and money uses. Of the \textbf{638 validation pairs}, 319 have the same meaning and 319 have different meanings. Always choosing one answer would get half correct, so \textbf{50\% is our simple baseline}.
 
-We expected nearby words such as \textit{river} or \textit{money} to help GloVe somewhat. We expected BERT to do better because it uses the full sentence when representing the target word.
+We expected nearby words to help GloVe and the full sentence to help BERT more.
 
 \sectiontitle{Methodology}
 
 \subsectiontitle{The dataset}
-We used the \textbf{SuperGLUE Word-in-Context (WiC)} dataset for every comparison. Each example contains \textbf{two sentences with the same marked word} and a label telling us whether that word has the same meaning in both.
+We used the \textbf{SuperGLUE Word in Context (WiC)} dataset throughout. Each example has \textbf{two sentences with the same marked word} and a label saying whether its meaning is the same.
 
-A river-side \textit{bank} paired with a financial \textit{bank} is labelled \textbf{different meaning}. Two financial uses of \textit{bank} would be labelled \textbf{same meaning}.
+A \textit{bank} beside a river paired with a financial \textit{bank} is labelled \textbf{different meaning}. Two financial uses of \textit{bank} would be labelled \textbf{same meaning}.
 
-WiC provides \textbf{5,428 labelled training pairs} and \textbf{638 labelled validation pairs}. We used the training data to choose the settings for each method, then kept those choices fixed and measured final performance on validation.
+WiC has \textbf{5,428 labelled training pairs} and \textbf{638 labelled validation pairs}. We chose method settings on training data, then measured performance on validation.
 
-The release also contains \textbf{1,400 test pairs}, but their correct labels are not public. We therefore cannot calculate a local test score and report validation results instead.
+The \textbf{1,400 test pairs} have no public labels, so we report validation scores.
 
 \subsectiontitle{The comparison}
-We used \textbf{two pretrained model families, GloVe and BERT, in three experimental conditions}. The dataset stayed identical in all three.
+We used \textbf{GloVe and BERT in three conditions}, always on the same data.
 
-\textbf{1. GloVe target word only.} We use the stored GloVe 6B 300-dimensional vector of the marked word. The same word receives the same vector in both sentences, giving us a context-free baseline.
+\textbf{1. GloVe target word only.} We use its stored vector with 300 numbers. The same word gets the same vector in both sentences.
 
-\textbf{2. GloVe with nearby words.} We take up to \textbf{two words before and two words after the target}, leave out the target itself, and average those GloVe vectors.
+\textbf{2. GloVe with nearby words.} We average the vectors of up to \textbf{two words before and after the target}, leaving out the target.
 
 \keybox{%
 ``The \textbf{muddy river} \textit{bank} \textbf{flooded after} rain.''\\[1mm]
@@ -186,18 +186,18 @@ For \textit{bank}, the context words are \textbf{muddy, river, flooded, after}.
 }
 \par\vspace{3mm}
 
-\textbf{3. BERT using the full sentence.} We use frozen \texttt{google-bert/bert-base-uncased}. BERT-base has 12 processing layers; our selected configuration combines the target representation from the \textbf{last four layers}. We do not fine-tune BERT on WiC.
+\textbf{3. BERT using the full sentence.} We use a frozen pretrained BERT base model. We combine the target representation from its \textbf{last four layers} without training it further on WiC.
 
 \columnbreak
 \subsectiontitle{From vectors to an answer}
-For each sentence pair, a method gives us two target representations. We compare them with \textbf{cosine similarity}. A higher score means the representations are more alike; a lower score means they are more different.
+For each sentence pair, a method gives us two target representations. We compare them with \textbf{cosine similarity}. A higher score means the representations are more alike. A lower score means they are more different.
 
-Using training data, we select a cutoff for each condition. Scores above the cutoff predict \textbf{same meaning}; scores below it predict \textbf{different meaning}. Our main score is \textbf{accuracy}, the percentage of the 638 validation pairs answered correctly.
+Using training data, we select a cutoff for each condition. Scores above the cutoff predict \textbf{same meaning}, while scores below it predict \textbf{different meaning}. Our main score is \textbf{accuracy}, the percentage of the 638 validation pairs answered correctly.
 
 \sectiontitle{Results}
 All three conditions were evaluated on the same \textbf{638 validation pairs}.
 
-GloVe target-only answered \textbf{\TargetCorrect{} pairs correctly (\TargetAccuracy)}. Adding nearby GloVe words increased this to \textbf{\ContextCorrect{} pairs (\ContextAccuracy)}. BERT performed best with \textbf{\BertCorrect{} correct pairs (\BertAccuracy)}.
+GloVe using the target word alone answered \textbf{\TargetCorrect{} pairs correctly (\TargetAccuracy)}. Adding nearby GloVe words increased this to \textbf{\ContextCorrect{} pairs (\ContextAccuracy)}. BERT performed best with \textbf{\BertCorrect{} correct pairs (\BertAccuracy)}.
 
 \vspace{2mm}
 {\fontsize{27}{32}\selectfont\bfseries\textcolor{deepblue}{Validation accuracy}}\par\vspace{3mm}
@@ -211,20 +211,19 @@ GloVe target-only answered \textbf{\TargetCorrect{} pairs correctly (\TargetAccu
 
 \keybox{%
 {\fontsize{30}{35}\selectfont\bfseries\textcolor{deepblue}{+\AccuracyGain{} percentage points}}\\[1mm]
-Compared with nearby-word GloVe, BERT answered \textbf{\BertGainCorrect{} additional sentence pairs correctly}.
+Compared with GloVe using nearby words, BERT answered \textbf{\BertGainCorrect{} additional sentence pairs correctly}.
 }
 \par\vspace{3mm}
 
 We repeated that comparison on \textbf{1,000 resampled versions} of the validation set. The estimated 95\% interval for BERT's advantage was \textbf{\GainLower{} to \GainUpper{} percentage points}, so the advantage remained positive throughout this interval.
 
-Looking pair by pair, both stronger methods were correct on \textbf{\BothCorrectCount{} pairs}. BERT alone was correct on \textbf{\BertOnlyCount}, nearby-word GloVe alone on \textbf{\StaticOnlyCount}, and both were wrong on \textbf{\BothWrongCount}. BERT was stronger on this benchmark, but neither method solved every example.
+Looking pair by pair, both stronger methods were correct on \textbf{\BothCorrectCount{} pairs}. BERT alone was correct on \textbf{\BertOnlyCount}, GloVe with nearby words alone on \textbf{\StaticOnlyCount}, and both were wrong on \textbf{\BothWrongCount}. BERT was stronger on this benchmark, but neither method solved every example.
 
 \sectiontitle{Conclusion}
-Our results support the idea that \textbf{context helps a model recognise a word's meaning}. The fixed GloVe vector could not distinguish the two uses of a word. Nearby words helped a little, and BERT's full-sentence representation did better.
+Our results support the idea that \textbf{context helps a model recognise a word's meaning}. The fixed GloVe vector could not distinguish the two uses of a word. Nearby words helped a little, and BERT's representation of the full sentence did better.
 
 BERT still missed \textbf{\BertErrorCount{} of 638 pairs}. We found a clear improvement, not a complete solution. Building and checking this comparison ourselves made the difference between static and contextual embeddings much easier to see.
 
-{\smallfont\textit{The appendix records the full method, result tables, author contributions, and use of AI-assisted tools.}\par}
 \end{multicols}
 
 \end{document}

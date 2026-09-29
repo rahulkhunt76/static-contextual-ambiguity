@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_canonical_poster_has_explanatory_sections_and_disclosure_pointer() -> None:
+def test_canonical_poster_has_explanatory_sections() -> None:
     source = (ROOT / "poster/poster.tex").read_text(encoding="utf-8")
     for heading in (
         "Introduction",
@@ -18,7 +18,7 @@ def test_canonical_poster_has_explanatory_sections_and_disclosure_pointer() -> N
         "Conclusion",
     ):
         assert rf"\sectiontitle{{{heading}}}" in source
-    assert "author contributions, and use of AI-assisted tools" in source
+    assert "The appendix records the full method" not in source
     assert r"\input{generated_results.tex}" in source
 
 

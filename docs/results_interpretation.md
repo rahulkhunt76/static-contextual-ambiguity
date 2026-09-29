@@ -22,8 +22,8 @@ All choices were made on the official 5,428-pair training split. On its fixed
 4,342/1,086 tuning partition, ±2 had the highest static-context holdout macro F1
 (0.5961), narrowly ahead of ±5 (0.5928), ±10 (0.5863), and the full sentence
 (0.5845). BERT mean-last-four reached 0.7247, versus 0.7145 for layer 12. The
-selection ledger was written before validation scoring and is identified by hash
-`debfd61b068f22ea1a737f238bd90ea4fb8bf44f675907e428949b559a0bb309`.
+selection record was written before validation scoring and is saved with the
+experiment outputs.
 
 The secondary layer analysis rises broadly from layer 1 (57.05% validation
 accuracy) through layer 9 (66.61%), then declines to 63.64% at layer 12. Layer 10

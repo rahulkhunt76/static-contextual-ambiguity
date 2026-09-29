@@ -8,12 +8,12 @@ and artifact checks were refreshed on 29 September 2026.
 
 - [x] Python is constrained to 3.11 and all direct/transitive dependencies are frozen in
   `uv.lock`.
-- [x] The official SuperGLUE v2 WiC archive checksum, expected members, split sizes,
+- [x] The official SuperGLUE v2 WiC archive, expected members, split sizes,
   labels, and every half-open character span validate.
 - [x] Target alignment selects every non-special WordPiece whose tokenizer offset overlaps
   the supplied target span; failures raise an error instead of guessing.
 - [x] Model/window choice and all classification thresholds use official training data
-  only. The selected configurations and integrity hash are saved in
+  only. The selected configurations are saved in
   `results/raw/selection_ledger.json`.
 - [x] The full 5,428-train / 638-validation experiment completed with the frozen GloVe and
   BERT revisions. The unlabeled 1,400-row test split has no reported score.
@@ -36,8 +36,8 @@ and artifact checks were refreshed on 29 September 2026.
 - [x] `uv run python scripts/build_submission.py --compile --stage --tectonic PATH`
 - [x] `uv run python scripts/verify_submission.py`
 
-The current verifier confirmed one 1683.78 x 2383.94 point A1 poster page, nine 595.28 x
-841.89 point A4 appendix pages (one displayed in landscape), extractable required text,
+The current verifier confirmed one 1683.78 x 2383.94 point A1 poster page, seven 595.28 x
+841.89 point A4 appendix pages, extractable required text,
 embedded fonts, six figure previews at or above 150 PPI, byte-identical staged copies, and exactly
 `poster.pdf` plus `appendix.pdf` in `submission/`. Eleven headline/result values are also
 recomputed from the committed CSV/JSON files and matched against extracted poster text.
@@ -50,8 +50,8 @@ research pipeline and saved results were unchanged.
 ## Human PDF review
 
 - [x] Poster reviewed as a full-page raster: centered header, balanced flowing columns,
-  24 pt body text, vector accuracy chart, paragraph spacing, margins, and closing line
-  are readable with no clipping. The redundant pairwise-outcome chart was removed.
+  24 pt body text, vector accuracy chart, paragraph spacing, and margins are readable
+  with no clipping. The redundant pairwise-outcome chart was removed.
 - [x] The appendix and both prefilled unsigned official declaration pages were
   rerendered and inspected.
 - [x] Poster visibly contains **Hypothesis**, **Methodology**, and **Results**.
@@ -62,8 +62,7 @@ research pipeline and saved results were unchanged.
 - [x] Poster background/model claims use compact author-year citations. Complete
   verified references and DOI links are in the appendix.
 - [x] Results use “validation” consistently and do not disguise it as a public test score.
-- [x] The poster's detector joke was replaced with a pointer to the appendix's
-  contribution and AI-use statement.
+- [x] The poster's detector joke and the extra closing sentence were removed.
 
 ## Required personal action before hand-in
 

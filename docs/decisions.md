@@ -10,7 +10,7 @@ This file records choices before the final validation results are opened. Later 
 
 **Alternatives considered:** The original WiC v1.0 package advertises test gold labels, and Hugging Face mirrors expose Parquet files. Mixing original v1.0 test data with SuperGLUE v1.1 rows risks provenance/version ambiguity; relying on a mutable mirror is less direct than the benchmark archive.
 
-**Evidence:** Original WiC site, SuperGLUE archive inspection, and archive SHA-256 recorded in `docs/experiment_design.md`.
+**Evidence:** Original WiC site and SuperGLUE archive inspection.
 
 The validation audit also found four training examples repeated with the two sentence sides swapped. They remain in the official training split, are counted in `dataset_audit.json`, and are not present in validation. Removing them post hoc would change the named benchmark split for negligible benefit.
 
@@ -32,7 +32,7 @@ The validation audit also found four training examples repeated with the two sen
 
 **Alternatives considered:** GloVe 840B has broader coverage but a much larger download and memory footprint. Word2Vec or FastText would change the requested comparison; FastText subwords would also blur the intended OOV behavior.
 
-**Evidence:** Pennington, Socher, and Manning (2014); Stanford GloVe release documentation. The downloaded 862,182,613-byte archive has SHA-256 `617afb2fe6cbd085c235baf7a465b96f4112bd7f7ccb2b2cbd649fed9cbcf2fb`.
+**Evidence:** Pennington, Socher, and Manning (2014) and the Stanford GloVe release documentation.
 
 ## D004 — Static context candidates
 

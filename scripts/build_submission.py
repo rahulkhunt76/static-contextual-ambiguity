@@ -18,6 +18,18 @@ DISPLAY_NAMES = {
     "bert_mean_last_four": "BERT mean last four",
 }
 
+PAIR_LABELS = {
+    "glove_target - glove_context_2": "Target GloVe minus nearby GloVe",
+    "glove_target - bert_mean_last_four": "Target GloVe minus BERT",
+    "glove_context_2 - bert_mean_last_four": "Nearby GloVe minus BERT",
+}
+
+METRIC_LABELS = {
+    "accuracy": "Accuracy",
+    "macro_f1": "Macro F1",
+    "roc_auc": "ROC-AUC",
+}
+
 
 def atomic_write_text(path: Path, content: str) -> None:
     """Write generated LaTeX without importing the inference-only ML stack."""
@@ -129,7 +141,6 @@ def generate_inputs(root: Path) -> None:
             ),
             _macro("BestAccuracyLayer", str(int(best_layer["system"].removeprefix("layer_")))),
             _macro("FinalLayerNumber", str(len(layers))),
-            _macro("SelectionHash", ledger["selection_hash"]),
             _macro(
                 "BertOnlyCount", str(summary["partition_counts"]["bert_only_correct"])
             ),
@@ -184,7 +195,7 @@ def generate_inputs(root: Path) -> None:
                 f"{'yes' if selected else 'no'} \\\\"
             )
     paired_rows = [
-        f"{_tex_escape(row.contrast)} & {row.metric.replace('_', ' ')} & "
+        f"{PAIR_LABELS[row.contrast]} & {METRIC_LABELS[row.metric]} & "
         f"{row.estimate:.4f} & [{row.lower:.4f}, {row.upper:.4f}] \\\\"
         for row in paired.itertuples(index=False)
     ]

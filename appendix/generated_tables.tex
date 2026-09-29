@@ -23,12 +23,12 @@ Static context & glove\_context\_sentence & 0.5930 & 0.5845 & no \\
 BERT & layer\_12 & 0.6789 & 0.7145 & no \\
 BERT & mean\_last\_four & 0.6891 & 0.7247 & yes \\}
 \newcommand{\PairedRows}{%
-glove\_target - glove\_context\_2 & accuracy & -0.0549 & [-0.1176, 0.0094] \\
-glove\_target - glove\_context\_2 & macro f1 & -0.2178 & [-0.2661, -0.1710] \\
-glove\_target - glove\_context\_2 & roc auc & -0.0800 & [-0.1273, -0.0378] \\
-glove\_target - bert\_mean\_last\_four & accuracy & -0.1708 & [-0.2195, -0.1238] \\
-glove\_target - bert\_mean\_last\_four & macro f1 & -0.3340 & [-0.3739, -0.2953] \\
-glove\_target - bert\_mean\_last\_four & roc auc & -0.2163 & [-0.2588, -0.1775] \\
-glove\_context\_2 - bert\_mean\_last\_four & accuracy & -0.1160 & [-0.1693, -0.0658] \\
-glove\_context\_2 - bert\_mean\_last\_four & macro f1 & -0.1161 & [-0.1690, -0.0664] \\
-glove\_context\_2 - bert\_mean\_last\_four & roc auc & -0.1363 & [-0.1912, -0.0811] \\}
+Target GloVe minus nearby GloVe & Accuracy & -0.0549 & [-0.1176, 0.0094] \\
+Target GloVe minus nearby GloVe & Macro F1 & -0.2178 & [-0.2661, -0.1710] \\
+Target GloVe minus nearby GloVe & ROC-AUC & -0.0800 & [-0.1273, -0.0378] \\
+Target GloVe minus BERT & Accuracy & -0.1708 & [-0.2195, -0.1238] \\
+Target GloVe minus BERT & Macro F1 & -0.3340 & [-0.3739, -0.2953] \\
+Target GloVe minus BERT & ROC-AUC & -0.2163 & [-0.2588, -0.1775] \\
+Nearby GloVe minus BERT & Accuracy & -0.1160 & [-0.1693, -0.0658] \\
+Nearby GloVe minus BERT & Macro F1 & -0.1161 & [-0.1690, -0.0664] \\
+Nearby GloVe minus BERT & ROC-AUC & -0.1363 & [-0.1912, -0.0811] \\}
