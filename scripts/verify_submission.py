@@ -230,13 +230,18 @@ def verify(root: Path, *, signed: bool = False) -> None:
     traced_values = _verify_result_trace(root, poster_text)
 
     appendix = PdfReader(submission / "appendix.pdf")
-    expected_pages = "at least seven"
-    if len(appendix.pages) < 7:
+    expected_pages = "at least eight"
+    if len(appendix.pages) < 8:
         raise RuntimeError(
             f"appendix must have {expected_pages} pages, found {len(appendix.pages)}"
         )
     for index, page in enumerate(appendix.pages, start=1):
         _assert_size(page, A4_POINTS, f"appendix page {index}")
+    page_texts = [" ".join((page.extract_text() or "").split()) for page in appendix.pages]
+    if not page_texts[1].startswith("1 Research question and scope"):
+        raise RuntimeError("appendix Section 1 must start on page 2")
+    if not page_texts[-3].startswith("References"):
+        raise RuntimeError("appendix references must start on their own page")
     required_appendix_text = [
         "Method and Results Appendix",
         "Primary validation results",

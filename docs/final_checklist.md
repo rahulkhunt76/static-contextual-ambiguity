@@ -39,7 +39,7 @@ uncached CPU rerun and the artifact checks were completed on 29 September 2026.
 - [x] `uv run python scripts/build_submission.py --compile --stage --tectonic PATH`
 - [x] `uv run python scripts/verify_submission.py`
 
-The current verifier confirmed one 1683.78 x 2383.94 point A1 poster page, seven 595.28 x
+The current verifier confirmed one 1683.78 x 2383.94 point A1 poster page, eight 595.28 x
 841.89 point A4 appendix pages, extractable required text,
 embedded fonts, six figure previews at or above 150 PPI, byte-identical staged copies, and exactly
 `poster.pdf` plus `appendix.pdf` in `submission/`. Eleven headline/result values are also
@@ -59,6 +59,8 @@ submission PDFs. The details and numerical tolerance are in
   with no clipping. The redundant pairwise-outcome chart was removed.
 - [x] The appendix and both prefilled unsigned official declaration pages were
   rerendered and inspected.
+- [x] The appendix title and contents are on page 1, Section 1 starts on page 2,
+  and References starts on its own page before the two declaration pages.
 - [x] Poster visibly contains **Hypothesis**, **Methodology**, and **Results**.
 - [x] The authors' latest Overleaf text is the canonical source in `poster/poster.tex`.
   It runs Introduction, Inspiration, Background, Hypothesis, Methodology, Results, and

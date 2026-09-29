@@ -60,7 +60,7 @@ raw-score rows with harmless hardware rounding differences. Anyone can rerun
 the commands above to produce the CPU values locally.
 
 The rebuilt poster and appendix passed `verify_submission.py`: one A1 poster,
-seven A4 appendix pages, embedded fonts, 150-PPI-or-better figure previews,
+eight A4 appendix pages, embedded fonts, 150-PPI-or-better figure previews,
 and 11 poster numbers traced to the result CSVs. The two official declaration
 pages remain unsigned and require each author's personal completion before
 submission.
