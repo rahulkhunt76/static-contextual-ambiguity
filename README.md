@@ -21,6 +21,7 @@ BERT answered 74 more pairs correctly than the nearby-word GloVe condition, a ga
 We used the official SuperGLUE version of WiC: 5,428 labelled training pairs and 638 labelled validation pairs. Its 1,400 public test pairs do not provide labels locally, so this repository does **not** claim a test score. Each pair contains two sentences with the same marked word and asks whether its meaning is the same in both.
 
 The train split selected the context window, BERT layer combination, and a separate cosine-similarity cutoff for each condition. Those choices were then fixed before final validation scoring. The saved [selection record](results/raw/selection_ledger.json), [predictions](results/final/predictions.csv), metrics, and configuration make this checkable. The [implementation audit](docs/implementation_audit.md) maps the main PDF claims to code and results. The [data notes](data/README.md) give upstream sources and terms. Large downloaded datasets, GloVe vectors, model weights, and caches are deliberately not committed.
+The [full rerun record](docs/full_rerun_verification.md) compares an independent CPU run with the committed GPU results.
 
 ## Clone and run
 

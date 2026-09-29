@@ -12,8 +12,9 @@ representations on its first pass.
 The official SuperGLUE WiC archive passed the checksum and split checks. It
 contains 5,428 labelled training pairs, 638 labelled validation pairs, and
 1,400 unlabelled test pairs. The GloVe archive matched the SHA-256 pinned in
-`configs/default.yaml` exactly. It was fetched from a mirror because the
-Stanford server was slow; the byte match means the experiment used the same
+`configs/default.yaml` exactly. It was fetched from a
+[Hugging Face mirror](https://huggingface.co/kcz358/glove/blob/fc671f626a92828aef148a010bc5abccd1239b0b/glove.6B.zip)
+because the Stanford server was slow; the byte match means the experiment used the same
 archive. BERT loaded at the exact model revision in that configuration. No
 test labels or test score were used.
 
