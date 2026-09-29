@@ -1,8 +1,8 @@
 # Final reproducibility and submission checklist
 
 This checklist distinguishes completed project gates from the personal metadata that the
-students must supply. Experiment evidence dates to 10 September 2026. Poster design
-and artifact checks were refreshed on 29 September 2026.
+students must supply. The original experiment dates to 10 September 2026. A full,
+uncached CPU rerun and the artifact checks were completed on 29 September 2026.
 
 ## Experiment and evidence
 
@@ -22,15 +22,18 @@ and artifact checks were refreshed on 29 September 2026.
   committed.
 - [x] Qualitative examples come from saved prediction rows; interpretations are explicitly
   descriptive rather than causal.
-- [x] A clean locked cached reproduction regenerated the full artifacts.
+- [x] A second full run used cached representations and reproduced every scored
+  result file byte for byte. The environment and cache-status records changed
+  as expected.
 
 ## Code and artifact gates
 
 - [x] `uv sync --frozen --all-groups`
-- [x] `uv run pytest -q` (65 tests after replacing the obsolete poster-copy checks)
+- [x] `uv run pytest -q` (66 tests)
 - [x] `uv run ruff check .`
 - [x] `uv run python scripts/run_quick_test.py`
-- [x] `uv run python scripts/run_experiment.py` (full cache-integrity reproduction)
+- [x] `uv run python scripts/run_experiment.py` (full uncached CPU run, then a
+  separate cached run)
 - [x] `uv run python scripts/analyse_results.py`
 - [x] `uv run python scripts/generate_figures.py`
 - [x] `uv run python scripts/build_submission.py --compile --stage --tectonic PATH`
@@ -43,10 +46,11 @@ embedded fonts, six figure previews at or above 150 PPI, byte-identical staged c
 recomputed from the committed CSV/JSON files and matched against extracted poster text.
 The current canonical poster build contains no overfull-box or unresolved-reference
 warning. Normal underfull-line warnings remain in narrow poster columns.
-This revision ran all 66 tests and Ruff successfully. It also rebuilt and
-verified both submission PDFs against the saved experiment results. The full
-model inference was not rerun in this checkout because the large upstream data,
-GloVe vectors, and BERT weights are not stored in the repository.
+This revision ran all 66 tests and Ruff successfully. It downloaded and
+checksum-checked the pinned inputs, reran all model inference, compared the
+results row by row with the committed GPU output, and rebuilt and verified both
+submission PDFs. The details and numerical tolerance are in
+`docs/full_rerun_verification.md`. Large inputs and caches stay outside Git.
 
 ## Human PDF review
 

@@ -1,8 +1,9 @@
 # Implementation and claim check
 
 Checked on 29 September 2026. This note links the main statements in the
-poster and appendix to the code and saved experiment files. It is a check of
-the current repository, not a new model run.
+poster and appendix to the code and saved experiment files. We also reran the
+full experiment from the pinned downloads on an Apple Silicon CPU; the
+comparison is recorded in `docs/full_rerun_verification.md`.
 
 | Claim in the PDFs | Where it is implemented or recorded |
 |---|---|
@@ -14,8 +15,9 @@ the current repository, not a new model run.
 | The paired comparison and error counts use the same 638 examples. | `lexical_ambiguity/evaluation/bootstrap.py` uses paired resamples; `results/final/paired_differences.csv` stores the intervals. `results/final/predictions.csv` gives 250 both correct, 178 BERT only, 104 GloVe context only, and 106 both wrong. |
 
 The current checkout passes all 66 tests, Ruff, the PDF build, and the
-submission verifier. A separate check recomputed the split sizes, model
-choices, correctness counts, and error groups from the saved JSON and CSV
-files. The large WiC and GloVe downloads, model weights, and inference cache
-are absent from this checkout, so the full 5,428/638 inference was not rerun
-here. The saved result files and prior run record remain in the repository.
+submission verifier. The independent CPU run used all 5,428 training and 638
+validation pairs. Its candidate choices, primary predictions, confusion counts,
+paired intervals, and headline results matched the committed GPU run. Raw BERT
+cosine scores differed by at most 0.00000254 across hardware. The original
+GPU outputs remain committed to avoid replacing them with thousands of
+insignificant floating point changes.

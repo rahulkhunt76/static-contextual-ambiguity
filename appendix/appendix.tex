@@ -193,9 +193,12 @@ and \emph{map} close together. It also brought together the same meaning in
 the mistakes, but they cannot establish a cause for them.
 
 \section{Reproducibility record}
-The full BERT pass ran on an NVIDIA GeForce RTX 3050 Ti Laptop GPU. The
-repository includes our locked dependencies, configuration, commands, and
-saved result files for checking the analysis.
+We first ran the full BERT pass on an NVIDIA GeForce RTX 3050 Ti Laptop GPU.
+On 29 September 2026, we ran it again on an Apple Silicon CPU using the same
+WiC release, GloVe vectors, and pinned BERT revision. All 638 primary
+predictions and the reported intervals matched the saved run. The cosine
+scores had small hardware-level numerical differences. The repository includes
+our locked dependencies, configuration, commands, and saved results.
 
 \section{Limitations}
 This experiment uses one English benchmark and one frozen BERT base model. The
