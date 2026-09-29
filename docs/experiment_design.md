@@ -30,7 +30,9 @@ The unlabeled SuperGLUE test split will be downloaded and validated structurally
 
 ## Split protocol and leakage controls
 
-The final validation labels are untouched until every primary-condition choice is frozen.
+The final validation labels are not used for model choice. Validation text is
+read earlier for the split audit and vocabulary collection; scoring waits until
+the primary choices are frozen.
 
 1. Stratify the official training split with seed 2026 into `tune_train` (80%, 4,342 examples) and `tune_holdout` (20%, 1,086 examples), preserving 50/50 labels.
 2. For each static-context window and each BERT pooling candidate, fit its threshold on `tune_train` only.

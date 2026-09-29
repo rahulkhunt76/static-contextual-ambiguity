@@ -43,9 +43,10 @@ embedded fonts, six figure previews at or above 150 PPI, byte-identical staged c
 recomputed from the committed CSV/JSON files and matched against extracted poster text.
 The current canonical poster build contains no overfull-box or unresolved-reference
 warning. Normal underfull-line warnings remain in narrow poster columns.
-This revision also reran the five focused poster-copy and submission-build tests;
-all passed. The full experiment and 65-test suite were not rerun because the
-research pipeline and saved results were unchanged.
+This revision ran all 66 tests and Ruff successfully. It also rebuilt and
+verified both submission PDFs against the saved experiment results. The full
+model inference was not rerun in this checkout because the large upstream data,
+GloVe vectors, and BERT weights are not stored in the repository.
 
 ## Human PDF review
 

@@ -208,8 +208,8 @@ class StaticContextEncoder:
                 used_target_fallback=False,
             )
 
-        # A target-only fallback keeps the sample in the evaluation without
-        # pretending an empty bag of words is a meaningful zero vector.
+        # No nearby GloVe words here. Use the target instead so this pair still
+        # counts in the results; a zero vector would not give a valid cosine.
         return StaticEncoding(
             vector=self.store.lookup(example.word),
             used_tokens=(),

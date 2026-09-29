@@ -42,8 +42,8 @@ def select_threshold(scores: ArrayLike, labels: ArrayLike) -> ThresholdSelection
     positive_count = int(np.count_nonzero(label_array))
     negative_count = len(label_array) - positive_count
 
-    # AUC does not depend on the threshold. Average ranks preserve the exact
-    # Mann-Whitney definition while handling tied scores deterministically.
+    # AUC stays the same as the cutoff moves. Give tied scores their average
+    # rank so they do not win or lose just because of row order.
     ranks = np.empty(len(score_array), dtype=np.float64)
     for start, count in zip(starts, counts, strict=True):
         ranks[order[start : start + count]] = start + (count + 1) / 2.0

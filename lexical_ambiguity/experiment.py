@@ -206,9 +206,8 @@ def _static_scores(
         if first is None or second is None:
             missing_targets += 1
         else:
-            # Both sides deliberately use the identical type-level lemma vector.
-            # Store the mathematical result exactly so floating-point reduction
-            # noise cannot turn word identity into a spurious ranking signal.
+            # Both sentences use the same lemma vector. Write 1.0 directly so
+            # a tiny rounding difference does not look like a real difference.
             target_scores[row] = 1.0
     score_sets["glove_target"] = target_scores
     diagnostics["glove_target"] = {
@@ -483,7 +482,8 @@ def run_experiment(
     selection_path = config.output.raw_results_dir / "selection_ledger.json"
     atomic_write_json(selection_path, ledger)
 
-    # Final validation evaluation starts only after the selection ledger exists.
+    # We read validation text earlier for the data checks and vocabulary. Its
+    # labels are only used for scores after the choices above are saved.
     validation_static, validation_static_diagnostics = _static_scores(
         validation, store, config.glove.context_windows
     )

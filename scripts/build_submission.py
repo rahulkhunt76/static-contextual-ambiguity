@@ -18,6 +18,7 @@ DISPLAY_NAMES = {
     "bert_mean_last_four": "BERT mean last four",
 }
 
+# The CSV keeps experiment IDs. These names are easier to read in the appendix.
 PAIR_LABELS = {
     "glove_target - glove_context_2": "Target GloVe minus nearby GloVe",
     "glove_target - bert_mean_last_four": "Target GloVe minus BERT",

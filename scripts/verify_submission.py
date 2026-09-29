@@ -207,7 +207,7 @@ def verify(root: Path, *, signed: bool = False) -> None:
         poster,
         (
             "Static vs Contextual Embeddings for Lexical Ambiguity",
-            "A Word in Context Evaluation",
+            "A Word-in-Context Evaluation",
             "Hypothesis",
             "Methodology",
             "Results",
