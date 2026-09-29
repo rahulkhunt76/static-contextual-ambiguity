@@ -154,10 +154,10 @@ The two meanings of \textit{bank} above are \textbf{homonyms} because they are u
 
 WiC does not ask the model to name a sense. It only asks whether the target word has the \textbf{same meaning} or a \textbf{different meaning} in the two sentences.
 
+\columnbreak
 \sectiontitle{Hypothesis}
 We expected more sentence context to make changes in meaning easier to recognise.
 
-\columnbreak
 With GloVe target-only, \textit{bank} receives the same vector in both sentences, so the method cannot see the river-versus-money difference. The validation set has \textbf{638 pairs}: 319 same-meaning and 319 different-meaning. A method that always chooses one answer would still get half correct, so \textbf{50\% is our simple baseline}.
 
 We expected nearby words such as \textit{river} or \textit{money} to help GloVe somewhat. We expected BERT to do better because it uses the full sentence when representing the target word.
@@ -217,14 +217,14 @@ Compared with nearby-word GloVe, BERT answered \textbf{\BertGainCorrect{} additi
 
 We repeated that comparison on \textbf{1,000 resampled versions} of the validation set. The estimated 95\% interval for BERT's advantage was \textbf{\GainLower{} to \GainUpper{} percentage points}, so the advantage remained positive throughout this interval.
 
-Looking pair by pair, both stronger methods were correct on \textbf{\BothCorrectCount{} pairs}. BERT alone was correct on \textbf{\BertOnlyCount}, nearby-word GloVe alone on \textbf{\StaticOnlyCount}, and both were wrong on \textbf{\BothWrongCount}. BERT was stronger overall, but it did not solve every example.
+Looking pair by pair, both stronger methods were correct on \textbf{\BothCorrectCount{} pairs}. BERT alone was correct on \textbf{\BertOnlyCount}, nearby-word GloVe alone on \textbf{\StaticOnlyCount}, and both were wrong on \textbf{\BothWrongCount}. BERT was stronger on this benchmark, but neither method solved every example.
 
 \sectiontitle{Conclusion}
 Our results support the idea that \textbf{context helps a model recognise a word's meaning}. The fixed GloVe vector could not distinguish the two uses of a word. Nearby words helped a little, and BERT's full-sentence representation did better.
 
 BERT still missed \textbf{\BertErrorCount{} of 638 pairs}. We found a clear improvement, not a complete solution. Building and checking this comparison ourselves made the difference between static and contextual embeddings much easier to see.
 
-{\smallfont\textit{If this sounds AI-generated, I will take it as a compliment to one human working late at night. Perhaps the boundary between us is ambiguous too.}\par}
+{\smallfont\textit{The appendix records the full method, result tables, author contributions, and use of AI-assisted tools.}\par}
 \end{multicols}
 
 \end{document}

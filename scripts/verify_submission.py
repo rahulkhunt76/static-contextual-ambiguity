@@ -109,8 +109,8 @@ def _verify_poster_sources(root: Path) -> int:
         raise RuntimeError("poster contains a removed panel or container")
     if r"\input{authors.tex}" not in source or "../assets/university-trier.pdf" not in source:
         raise RuntimeError("poster is missing its author block or official university logo")
-    if "AI-generated" not in source:
-        raise RuntimeError("poster copy is missing the approved closing line")
+    if "author contributions, and use of AI-assisted tools" not in source:
+        raise RuntimeError("poster is missing its appendix disclosure pointer")
     pngs = sorted((root / "figures").glob("*.png"))
     if not pngs:
         raise RuntimeError("no high-resolution figure previews found")
@@ -220,7 +220,7 @@ def verify(root: Path, *, signed: bool = False) -> None:
             "lexical ambiguity",
             "static embedding",
             "contextual",
-            "AI-generated",
+            "AI-assisted tools",
             "Choudhary Prashant Santosh",
             "1910474",
             "Rahul Khunt",
@@ -233,9 +233,8 @@ def verify(root: Path, *, signed: bool = False) -> None:
     traced_values = _verify_result_trace(root, poster_text)
 
     appendix = PdfReader(submission / "appendix.pdf")
-    expected_pages = "at least eight" if signed else "eight"
-    wrong_page_count = len(appendix.pages) < 8 if signed else len(appendix.pages) != 8
-    if wrong_page_count:
+    expected_pages = "at least nine"
+    if len(appendix.pages) < 9:
         raise RuntimeError(
             f"appendix must have {expected_pages} pages, found {len(appendix.pages)}"
         )
@@ -244,17 +243,24 @@ def verify(root: Path, *, signed: bool = False) -> None:
     required_appendix_text = [
         "Method and Results Appendix",
         "Primary validation results",
+        "Author contributions and use of AI tools",
+        "Canva",
+        "GLM",
+        "OpenAI Codex",
         "References",
     ]
     if not signed:
-        required_appendix_text.append("unsigned placeholder")
+        required_appendix_text.append("Declaration of Academic Integrity")
     appendix_text = _verify_text(
         appendix,
         tuple(required_appendix_text),
         "appendix",
     )
-    if signed and "unsigned placeholder" in appendix_text.lower():
-        raise RuntimeError("signed mode requested, but the unsigned placeholder remains")
+    status = (appendix.metadata or {}).get("/DeclarationStatus")
+    if signed and status != "user-supplied-signed-forms":
+        raise RuntimeError("signed mode requires the two supplied declaration pages")
+    if not signed and status == "user-supplied-signed-forms":
+        raise RuntimeError("signed declarations were supplied; rerun with --signed")
     appendix_fonts = _verify_fonts(appendix, "appendix")
 
     print(
@@ -271,7 +277,7 @@ def main() -> None:
     parser.add_argument(
         "--signed",
         action="store_true",
-        help="require a supplied declaration instead of the unsigned placeholder",
+        help="require two author-supplied declaration pages instead of the unsigned forms",
     )
     arguments = parser.parse_args()
     verify(Path(__file__).resolve().parents[1], signed=arguments.signed)

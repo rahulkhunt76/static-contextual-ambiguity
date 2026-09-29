@@ -43,7 +43,7 @@ uv run python scripts/generate_figures.py
 
 ## Build the submission
 
-The editable poster is [poster/poster.tex](poster/poster.tex), adapted from the latest Overleaf source supplied by the authors. The result numbers are generated from the saved experiment files. The official university logo is in [assets](assets), and the pairwise outcome chart comes from [figures](figures). Tectonic 0.17 or a compatible LaTeX installation is needed to rebuild the PDFs.
+The editable poster is [poster/poster.tex](poster/poster.tex), adapted from the latest Overleaf source supplied by the authors. The result numbers are generated from the saved experiment files. The official university logo is in [assets](assets), and the accuracy chart is drawn as vectors in LaTeX. Tectonic 0.17 or a compatible LaTeX installation is needed to rebuild the PDFs.
 
 ```powershell
 $tectonic = "C:\path\to\tectonic.exe"
@@ -51,7 +51,7 @@ uv run python scripts/build_submission.py --compile --stage --tectonic $tectonic
 uv run python scripts/verify_submission.py
 ```
 
-Only [submission/poster.pdf](submission/poster.pdf) and [submission/appendix.pdf](submission/appendix.pdf) belong in the exam submission. The appendix contains the fuller methods, tables, references, and an **unsigned integrity-declaration placeholder**. That placeholder is a reminder, not a valid signed declaration. We cannot complete or sign it on a student's behalf. Once you have the official signed PDF, rebuild with `--declaration "C:\path\to\signed-declaration.pdf"` and run `verify_submission.py --signed`.
+Only [submission/poster.pdf](submission/poster.pdf) and [submission/appendix.pdf](submission/appendix.pdf) belong inside the final ZIP. The appendix contains the fuller methods, tables, references, a specific account of author contributions and AI assistance, and **two prefilled but unsigned copies of the official University of Trier declaration**, one for each author. Unsigned forms are not a valid submission. After each author has checked the account and personally completed the examiner, place/date, and signature fields, combine the two signed pages into one PDF. Rebuild with `--declaration "C:\path\to\both-signed-forms.pdf"`, run `verify_submission.py --signed`, visually inspect both signatures, then run `scripts/package_submission.py`. The [professor-guideline review](docs/guidance_review.md) gives the exact remaining checks, including the scope of written examiner permission for the disclosed AI uses. The package will be `1910474_1911272.zip` with exactly the two PDFs.
 
 ## Repository map
 

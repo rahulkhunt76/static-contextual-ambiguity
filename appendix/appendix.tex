@@ -207,6 +207,26 @@ classifier. A global cosine threshold compresses potentially useful geometry.
 Surface-mismatch groups are observational and confounded. No score is reported
 for the label-hidden test split.
 
+\section{Author contributions and use of AI tools}
+\emph{AI-assisted wording notice: OpenAI Codex drafted the wording of this
+section for the authors to verify before signing their declarations.}
+
+The authors selected WiC, designed the three comparison conditions, initialized
+the frozen GloVe and BERT checkpoints, and chose settings and thresholds using
+training data only. They ran and checked the audit, inference, validation
+analysis, tables, and figures. They did not train or fine-tune model weights.
+The saved selection ledger, predictions, and metrics record these choices.
+
+The authors chose the poster's explanations, examples, and graphs and checked
+the numbers against saved results. Canva helped explore the layout; the final
+poster was assembled in LaTeX. GLM assisted with LaTeX layout code. OpenAI
+Codex provided limited coding suggestions and debugging in an interactive
+paired-programming process. It also drafted this disclosure, revised appendix
+wording and the poster's final italic sentence, and checked the PDFs. The
+authors remain responsible for the code, claims, figures, and final submission.
+No AI detector score is
+used as evidence of authorship.
+
 \section{References}
 \begin{thebibliography}{99}
 \bibitem{survey} J. Camacho-Collados and M. T. Pilehvar. From Word to Sense
@@ -215,6 +235,9 @@ Embeddings: A Survey on Vector Representations of Meaning. \emph{JAIR}, 2018.
 \bibitem{wic} M. T. Pilehvar and J. Camacho-Collados. WiC: The Word-in-Context
 Dataset for Evaluating Context-Sensitive Meaning Representations. NAACL, 2019.
 \url{https://doi.org/10.18653/v1/N19-1128}.
+\bibitem{superglue} A. Wang et al. SuperGLUE: A Stickier Benchmark for
+General-Purpose Language Understanding Systems. NeurIPS, 2019.
+\url{https://papers.nips.cc/paper_files/paper/2019/hash/4496bf24afe7fab6f046bf4923da8de6-Abstract.html}.
 \bibitem{glove} J. Pennington, R. Socher, and C. D. Manning. GloVe: Global Vectors
 for Word Representation. EMNLP, 2014.
 \url{https://doi.org/10.3115/v1/D14-1162}.
@@ -241,8 +264,17 @@ the Evaluation of Word Embeddings: The Effects of Antonymy and Polysemy. IWCS,
 \bibitem{erren} T. C. Erren and P. E. Bourne. Ten Simple Rules for a Good Poster
 Presentation. \emph{PLOS Computational Biology}, 2007.
 \url{https://doi.org/10.1371/journal.pcbi.0030102}.
+\bibitem{wic_archive} SuperGLUE. WiC v2 dataset archive.
+\url{https://dl.fbaipublicfiles.com/glue/superglue/data/v2/WiC.zip}.
+\bibitem{glove_release} Stanford NLP. GloVe pretrained-vector release, 6B tokens,
+300 dimensions. \url{https://nlp.stanford.edu/projects/glove/}.
+\bibitem{bert_checkpoint} Google BERT. \texttt{bert-base-uncased} model card and
+checkpoint. \url{https://huggingface.co/google-bert/bert-base-uncased}.
 \end{thebibliography}
 
 \clearpage
-\includepdf[pages=-]{integrity_declaration_PLACEHOLDER.pdf}
+% One official form for each author. Replace both unsigned pages with a
+% two-page PDF of the personally signed forms for the final submission.
+\includepdf[pages=-]{declaration_1910474_unsigned.pdf}
+\includepdf[pages=-]{declaration_1911272_unsigned.pdf}
 \end{document}

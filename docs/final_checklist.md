@@ -1,8 +1,8 @@
 # Final reproducibility and submission checklist
 
 This checklist distinguishes completed project gates from the personal metadata that the
-student must supply. Experiment evidence dates to 10 September 2026. Poster design
-and artifact checks were refreshed on 25 September 2026.
+students must supply. Experiment evidence dates to 10 September 2026. Poster design
+and artifact checks were refreshed on 29 September 2026.
 
 ## Experiment and evidence
 
@@ -36,21 +36,24 @@ and artifact checks were refreshed on 25 September 2026.
 - [x] `uv run python scripts/build_submission.py --compile --stage --tectonic PATH`
 - [x] `uv run python scripts/verify_submission.py`
 
-The last verifier confirmed one 1683.78 x 2383.94 point A1 poster page, eight 595.28 x
+The current verifier confirmed one 1683.78 x 2383.94 point A1 poster page, nine 595.28 x
 841.89 point A4 appendix pages (one displayed in landscape), extractable required text,
 embedded fonts, six figure previews at or above 150 PPI, byte-identical staged copies, and exactly
 `poster.pdf` plus `appendix.pdf` in `submission/`. Eleven headline/result values are also
 recomputed from the committed CSV/JSON files and matched against extracted poster text.
 The current canonical poster build contains no overfull-box or unresolved-reference
 warning. Normal underfull-line warnings remain in narrow poster columns.
+This revision also reran the five focused poster-copy and submission-build tests;
+all passed. The full experiment and 65-test suite were not rerun because the
+research pipeline and saved results were unchanged.
 
 ## Human PDF review
 
 - [x] Poster reviewed as a full-page raster: centered header, balanced flowing columns,
   24 pt body text, vector accuracy chart, paragraph spacing, margins, and closing line
   are readable with no clipping. The redundant pairwise-outcome chart was removed.
-- [x] The changed appendix title page and the unchanged declaration placeholder page
-  were rerendered and inspected. Earlier review covered the other appendix pages.
+- [x] The appendix and both prefilled unsigned official declaration pages were
+  rerendered and inspected.
 - [x] Poster visibly contains **Hypothesis**, **Methodology**, and **Results**.
 - [x] The authors' latest Overleaf text is the canonical source in `poster/poster.tex`.
   It runs Introduction, Inspiration, Background, Hypothesis, Methodology, Results, and
@@ -59,6 +62,8 @@ warning. Normal underfull-line warnings remain in narrow poster columns.
 - [x] Poster background/model claims use compact author-year citations. Complete
   verified references and DOI links are in the appendix.
 - [x] Results use “validation” consistently and do not disguise it as a public test score.
+- [x] The poster's detector joke was replaced with a pointer to the appendix's
+  contribution and AI-use statement.
 
 ## Required personal action before hand-in
 
@@ -66,9 +71,15 @@ warning. Normal underfull-line warnings remain in narrow poster columns.
 - [x] Official Trier logo is included as vector artwork with source recorded.
 - [x] Requested limitations, success/warning, banner and bordered panels are removed.
 - [x] Appendix author names, enrollment numbers, and repository link are personalized.
-- [ ] Insert the exact institution-approved integrity declaration.
-- [ ] Sign and date the declaration personally.
+- [x] Check the professor's two-page project rules and linked official declaration;
+  the requirement-by-requirement review is in `docs/guidance_review.md`.
+- [ ] Confirm that the contribution and AI-use account names every tool actually
+  used and accurately describes each author's work.
+- [x] Append two copies of the linked official declaration form, one per author.
+- [ ] Check the scope of the examiner's written permission for the disclosed AI
+  uses. The student reports that permission exists, but the text was not supplied.
+- [ ] Each author completes, signs, and dates their own official form.
 - [ ] Rebuild with `--declaration`, then rerun `scripts/verify_submission.py --signed`.
 
-The present unsigned page is intentionally labeled as a placeholder. It is evidence that
-the declaration slot exists, not a signature or claim of compliance.
+The two prefilled official pages remain unsigned. The release script does not
+recognize a signature automatically; each author must inspect the signed pages.

@@ -6,18 +6,33 @@ import argparse
 import json
 import shutil
 import subprocess
+import tempfile
 from pathlib import Path
 
 import pandas as pd
 from pypdf import PdfReader, PdfWriter
-
-from lexical_ambiguity.utils import atomic_write_text
 
 DISPLAY_NAMES = {
     "glove_target": "GloVe target",
     "glove_context_2": "GloVe context ($\\pm 2$)",
     "bert_mean_last_four": "BERT mean last four",
 }
+
+
+def atomic_write_text(path: Path, content: str) -> None:
+    """Write generated LaTeX without importing the inference-only ML stack."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        prefix=f"{path.name}.",
+        suffix=".tmp",
+        dir=path.parent,
+        delete=False,
+    ) as temporary:
+        temporary.write(content)
+        temporary_path = Path(temporary.name)
+    temporary_path.replace(path)
 
 
 def _percent(value: float, digits: int = 1) -> str:
@@ -212,26 +227,25 @@ def stage_submission(root: Path) -> None:
 
 
 def _append_signed_declaration(appendix: Path, declaration: Path) -> None:
-    """Replace the generated placeholder page with user-supplied declaration pages."""
+    """Replace both prefilled official forms with two personally signed copies."""
     if not declaration.is_file():
         raise RuntimeError(f"signed declaration not found: {declaration}")
     base = PdfReader(appendix)
-    if not base.pages:
-        raise RuntimeError("compiled appendix has no pages")
-    last_page_text = (base.pages[-1].extract_text() or "").lower()
-    if "unsigned placeholder" not in last_page_text:
-        raise RuntimeError("appendix does not end with the expected unsigned placeholder")
+    if len(base.pages) < 2 or any(
+        "Declaration of Academic Integrity" not in (page.extract_text() or "")
+        for page in base.pages[-2:]
+    ):
+        raise RuntimeError("appendix does not end with two official declaration forms")
     signed = PdfReader(declaration)
-    if not signed.pages:
-        raise RuntimeError("signed declaration PDF has no pages")
+    if len(signed.pages) != 2:
+        raise RuntimeError("provide exactly two signed declaration pages, one per author")
 
     writer = PdfWriter()
-    for page in base.pages[:-1]:
+    for page in base.pages[:-2]:
         writer.add_page(page)
     for page in signed.pages:
         writer.add_page(page)
-    if base.metadata:
-        writer.add_metadata(dict(base.metadata))
+    writer.add_metadata({"/DeclarationStatus": "user-supplied-signed-forms"})
     temporary = appendix.with_name("appendix.with-declaration.pdf")
     with temporary.open("wb") as handle:
         writer.write(handle)
@@ -242,11 +256,7 @@ def compile_documents(root: Path, tectonic: Path, declaration: Path | None = Non
     """Compile the declaration first, then the two deliverables."""
     if not tectonic.is_file():
         raise RuntimeError(f"Tectonic executable not found: {tectonic}")
-    sources = (
-        root / "appendix/integrity_declaration_PLACEHOLDER.tex",
-        root / "poster/poster.tex",
-        root / "appendix/appendix.tex",
-    )
+    sources = (root / "poster/poster.tex", root / "appendix/appendix.tex")
     for source in sources:
         subprocess.run(
             [
@@ -280,7 +290,7 @@ def main() -> None:
     parser.add_argument(
         "--declaration",
         type=Path,
-        help="signed declaration PDF to replace the generated placeholder page",
+        help="two-page PDF containing one signed official declaration per author",
     )
     arguments = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
